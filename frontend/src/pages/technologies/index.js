@@ -34,7 +34,17 @@ const Technologies = () => {
           </div>
         </div>
       </div>
-      
+
+      <hr></hr>
+      <table align = 'center'>
+        <tr>
+          <td><img src="https://shulikin.com/images/py.png" alt="Python" ></img></td>
+          <td><img src="https://shulikin.com/images/django.png" alt="Django" ></img></td>
+          <td><img src="https://shulikin.com/images/rest.png" alt="Django REST Framework" ></img></td>
+        </tr>
+      </table>
+      <hr></hr>
+
     </Container>
   </Main>
 }
