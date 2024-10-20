@@ -7,4 +7,5 @@
 https://shulikin.hopto.org/
 
 логин        admin@mail.com
+
 пароль      admin12345
