@@ -86,6 +86,7 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 2200
+PORT_DB = 5432
 
 DATABASES = {
     'default': {
@@ -94,7 +95,7 @@ DATABASES = {
         'USER': os.getenv('POSTGRES_USER', 'django'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
         'HOST': os.getenv('DB_HOST', 'db'),
-        'PORT': os.getenv('DB_PORT', 5432),
+        'PORT': os.getenv('DB_PORT', PORT_DB),
     }
 }
 
