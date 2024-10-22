@@ -1,7 +1,6 @@
 from django.db import transaction
 from django.contrib.auth import get_user_model
 from drf_extra_fields.fields import Base64ImageField
-
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from rest_framework.validators import UniqueTogetherValidator
@@ -37,7 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
     def get_is_subscribed(self, obj):
-        current_user = self.context.get('request').user
+        current_user = self.context('request').user
         if hasattr(obj, 'subs'):
             return bool(obj.subs and obj.subs[0].is_subscribed)
         return (
@@ -95,6 +94,17 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
             'id',
             'amount'
         )
+
+        def validate_amount(self, value):
+            if value < 1:
+                raise serializers.ValidationError(
+                    'Количество не должно быть меньше 1'
+                )
+            if value > 100_000:
+                raise serializers.ValidationError(
+                    'Количество не должно быть больше 100000'
+                )
+            return value
 
 
 class IngredientGetSerializer(serializers.ModelSerializer):
@@ -197,14 +207,14 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         tags = data.get('tags', [])
-        if len(tags) == 0:
+        if not tags:
             raise serializers.ValidationError('Добавьте тег.')
 
         if len(set(tags)) != len(tags):
             raise serializers.ValidationError('Должен быть уникальным.')
 
         ingredients = data.get('recipe_ingredients', [])
-        if len(ingredients) == 0:
+        if not ingredients:
             raise serializers.ValidationError('Добавьте ингредиент.')
 
         id_ingredients = {
