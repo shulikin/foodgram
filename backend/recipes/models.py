@@ -107,10 +107,7 @@ class Recipe(AuthorModel):
     cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления',
         validators=[
-            MinValueValidator(
-                MIN_TIME,
-                f'Не может быть меньше {MIN_TIME} мин.',
-            ),
+            MinValueValidator(MIN_TIME,),
         ],
     )
 
