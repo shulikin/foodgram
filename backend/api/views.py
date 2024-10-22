@@ -66,7 +66,7 @@ class UserViewSet(djoser_views.UserViewSet):
 
         elif self.action in ('subscriptions',):
             return (
-                Subscriber.objects.user_subscriber
+                Subscriber.objects.filter(user=user)
                 .prefetch_related(
                     Subscriber.get_prefetch_subscribers(
                         'author__subscribers',
@@ -202,26 +202,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
 
-    # def get_serializer_class(self):
-    #     if self.action in ['list', 'retrieve']:
-    #         return RecipeSerializer
-    #     elif self.action == 'get_link':
-    #         return ShortLinkSerializer
-    #     elif self.action == 'favorite':
-    #         return FavoriteSerializer
-    #     elif self.action == 'shopping_cart':
-    #         return ShoppingCartSerializer
-    #     return RecipeCreateSerializer
-
     def get_serializer_class(self):
-        fun_action = {
-            'list': RecipeSerializer,
-            'retrieve': RecipeSerializer,
-            'get_link': ShortLinkSerializer,
-            'favorite': FavoriteSerializer,
-            'shopping_cart': ShoppingCartSerializer,
-        }
-        return fun_action.get(self, RecipeCreateSerializer)
+        if self.action in ['list', 'retrieve']:
+            return RecipeSerializer
+        elif self.action == 'get_link':
+            return ShortLinkSerializer
+        elif self.action == 'favorite':
+            return FavoriteSerializer
+        elif self.action == 'shopping_cart':
+            return ShoppingCartSerializer
+        return RecipeCreateSerializer
 
     def get_queryset(self):
         user = self.request.user
