@@ -66,7 +66,7 @@ class UserViewSet(djoser_views.UserViewSet):
 
         elif self.action in ('subscriptions',):
             return (
-                Subscriber.objects.filter(user=user)
+                Subscriber.objects.subscriber
                 .prefetch_related(
                     Subscriber.get_prefetch_subscribers(
                         'author__subscribers',
@@ -202,26 +202,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
 
-    # def get_serializer_class(self):
-
-    #     if self.action in ['list', 'retrieve']:
-
-    #         return RecipeSerializer
-
-    #     elif self.action == 'get_link':
-
-    #         return ShortLinkSerializer
-
-    #     elif self.action == 'favorite':
-
-    #         return FavoriteSerializer
-
-    #     elif self.action == 'shopping_cart':
-
-    #         return ShoppingCartSerializer
-
-    #     return RecipeCreateSerializer
-
     def get_serializer_class(self):
         fun_action = {
             'list': RecipeSerializer,
@@ -344,19 +324,21 @@ class RecipeViewSet(viewsets.ModelViewSet):
             shopping_cart__author=user)
         shopping_list = ingredients_list(author_shopping_list)
 
-        if file_ext == 'pdf':
-            content_type = 'application/pdf'
-            buffer = pdf_shopping_list(
-                shopping_list,
-                user
-            )
-        else:
+        if file_ext != 'pdf':
             return Response(
                 {'detail': 'Недопустимый формат файла.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        response = FileResponse(buffer, content_type=content_type)
+        content_type = 'application/pdf'
+        buffer = pdf_shopping_list(
+            shopping_list,
+            user
+        )
+        response = FileResponse(
+            buffer,
+            content_type=content_type
+        )
         filename = f'{user.username}_shopping_cart.{file_ext}'
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
 

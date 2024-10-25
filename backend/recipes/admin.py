@@ -1,16 +1,13 @@
-# -*- coding: utf-8 -*-
-
-from django.contrib import admin
-
 import csv
 
-from .forms import ImportForm
+from django.contrib import admin
 from django.urls import path
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
 
+from .forms import ImportForm
 from .models import (
     FavoriteRecipe,
     Import,
@@ -50,7 +47,7 @@ class RecipeAdmin(admin.ModelAdmin):
     search_help_text = 'Поиск по названию рецепта или `username` автора'
     filter_horizontal = ('tags',)
     list_filter = ('tags',)
-    readonly_fields = ('subscriber',)
+    readonly_fields = ('favorite_recipe',)
     inlines = [RecipeIngredientInline]
 
     fieldsets = (
@@ -59,7 +56,7 @@ class RecipeAdmin(admin.ModelAdmin):
             {
                 'fields': (
                     'author',
-                    ('name', 'cooking_time', 'subscriber'),
+                    ('name', 'cooking_time', 'favorite_recipe'),
                     'text',
                     'image',
                     'tags',
@@ -68,11 +65,9 @@ class RecipeAdmin(admin.ModelAdmin):
         ),
     )
 
-    def subscriber(self, obj):
-        """Подписки"""
+    def favorite_recipe(self, obj):
+        """Избраное"""
         return FavoriteRecipe.objects.filter(recipe=obj).count()
-
-    subscriber. short_description = "Добавили в избранное"
 
 
 class TagAdmin(admin.ModelAdmin):

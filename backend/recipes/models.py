@@ -24,7 +24,11 @@ class AuthorModel(models.Model):
     )
 
     class Meta:
+        ordering = ('-id', )
         abstract = True
+
+    def __str__(self):
+        return self.author
 
 
 class Tag(models.Model):
@@ -42,6 +46,7 @@ class Tag(models.Model):
     )
 
     class Meta:
+        ordering = ('-id', )
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
@@ -142,6 +147,7 @@ class RecipeIngredient(models.Model):
     )
 
     class Meta:
+        ordering = ('-id', )
         default_related_name = 'recipe_ingredients'
         constraints = [
             models.UniqueConstraint(
@@ -189,6 +195,7 @@ class ShoppingCart(AuthorRecipeModel):
     """Корзина"""
 
     class Meta:
+        ordering = ('-id', )
         default_related_name = 'shopping_cart'
         verbose_name = 'Корзина'
         verbose_name_plural = verbose_name
@@ -215,6 +222,7 @@ class Import(models.Model):
     )
 
     class Meta:
+        ordering = ('-id', )
         verbose_name = 'Учет импорта CSV'
         verbose_name_plural = verbose_name
 

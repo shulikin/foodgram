@@ -87,6 +87,10 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
         queryset=Ingredient.objects.all(),
         source='ingredient'
     )
+    amount = serializers.IntegerField(
+        max_value=32_000,
+        min_value=1
+    )
 
     class Meta:
         model = RecipeIngredient
@@ -94,17 +98,6 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
             'id',
             'amount'
         )
-
-    def validate_amount(self, value):
-        if value < 1:
-            raise serializers.ValidationError(
-                'Количество не должно быть меньше 1'
-            )
-        if value > 100_000:
-            raise serializers.ValidationError(
-                'Количество не должно быть больше 100000'
-            )
-        return value
 
 
 class IngredientGetSerializer(serializers.ModelSerializer):
@@ -156,6 +149,10 @@ class RecipeSerializer(serializers.ModelSerializer):
     is_in_shopping_cart = serializers.BooleanField(
         default=False,
         read_only=True
+    )
+    cooking_time = serializers.IntegerField(
+        max_value=32_000,
+        min_value=1
     )
 
     class Meta:
