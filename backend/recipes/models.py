@@ -5,7 +5,6 @@ from django.core.validators import (
 from django.conf import settings
 from django.db import models
 
-from users.models import User
 
 AMOUNT_MIN = 1
 AMOUNT_MAX = 32000
