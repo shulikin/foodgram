@@ -5,6 +5,8 @@ from django.core.validators import (
 from django.conf import settings
 from django.db import models
 
+from users.models import User
+
 AMOUNT_MIN = 1
 AMOUNT_MAX = 32000
 INGREDIENT_CHAR_MAX = 128
@@ -175,6 +177,16 @@ class AuthorRecipeModel(AuthorModel):
 
 class FavoriteRecipe(AuthorRecipeModel):
     """Избранное"""
+    # user = models.ForeignKey(
+    #     User,
+    #     on_delete=models.CASCADE,
+    #     related_name='favorites_user',
+    # )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='recipe_id',
+    )
 
     class Meta:
         default_related_name = 'favorites'

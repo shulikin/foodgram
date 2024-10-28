@@ -8,6 +8,31 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 
+TITLE = 'Shopping List'
+HEADER_TEXT = 'Список покупок'
+FOOTER_TEXT = 'FoodGram @ 2024'
+FONT_FAMILY = 'Arial'
+REGISTER_FONT_URL = 'data_font/SpecialElite.ttf'
+FONT_SIZE = 12
+TEXT_CANVAS_H = 0.8
+TEXT_CANVAS = 0.5
+TEXT_COLOR = colors.whitesmoke
+BOX_COLOR = colors.black
+VALIGN = "TOP"
+ALIGN = "RIGHT"
+TOPPADDING = 10
+BOTTOMPADDING = 10
+LEFTPADDING = 100
+FONTNAME = 'Arial'
+FONTSIZE = 13
+LINEBELOW_COLOR = colors.gray
+LINEBELOW = 1
+BACKGROUND_COLOR = colors.beige
+GRID_COLOR = colors.white
+GRID = 0
+DATA_COLUMN1 = 'Ингредиенты'
+DATA_COLUMN2 = 'Количество'
+
 
 def ingredients_list(recipe_list):
     ingredients = {}
@@ -26,26 +51,24 @@ def pdf_shopping_list(shopping_list, user):
 
     def header_footer(canvas, doc):
         canvas.saveState()
-        canvas.setFont('Arial', 12)
-        header_text = 'Список покупок'
-        footer_text = 'FoodGram @ 2024'
+        canvas.setFont(FONT_FAMILY, FONT_SIZE)
         w, h = doc.pagesize
-        canvas.drawString(inch, h - 0.8 * inch, header_text)
-        canvas.drawString(inch, 0.5 * inch, footer_text)
+        canvas.drawString(inch, h - TEXT_CANVAS_H * inch, HEADER_TEXT)
+        canvas.drawString(inch, TEXT_CANVAS * inch, FOOTER_TEXT)
         canvas.restoreState()
 
     pdfmetrics.registerFont(
-        TTFont('Arial', 'data_font/SpecialElite.ttf')
+        TTFont(FONT_FAMILY, REGISTER_FONT_URL)
     )
     buffer = BytesIO()
     doc = SimpleDocTemplate(
         buffer,
         pagesize=letter,
-        title='Shopping List'
+        title=TITLE
     )
 
     data = [
-        ['Ингредиенты', 'Количество']
+        [DATA_COLUMN1, DATA_COLUMN2]
     ]
 
     for ingredient in shopping_list:
@@ -53,18 +76,18 @@ def pdf_shopping_list(shopping_list, user):
 
     table = Table(data)
     table.setStyle(TableStyle([
-        ('TEXTCOLOR', (-1, 0), (0, 0), colors.whitesmoke),
-        ("BOX", (0, 0), (-1, -1), 0, colors.black),
-        ("VALIGN", (0, 0), (-1, -1), "TOP"),
-        ("ALIGN", (0, 0), (-1, -1), "RIGHT"),
-        ("TOPPADDING", (0, 0), (-1, -1), 10),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
-        ("LEFTPADDING", (0, 0), (-1, -1), 100),
-        ('FONTNAME', (0, 0), (-1, -1), 'Arial'),
-        ("FONTSIZE", (0, 0), (-1, -1), 13),
-        ("LINEBELOW", (0, -1), (-1, -1), 1, colors.gray),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-        ('GRID', (0, 0), (-1, -1), 0, colors.white)
+        ('TEXTCOLOR', (-1, 0), (0, 0), TEXT_COLOR),
+        ("BOX", (0, 0), (-1, -1), 0, BOX_COLOR),
+        ("VALIGN", (0, 0), (-1, -1), VALIGN),
+        ("ALIGN", (0, 0), (-1, -1), ALIGN),
+        ("TOPPADDING", (0, 0), (-1, -1), TOPPADDING),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), BOTTOMPADDING),
+        ("LEFTPADDING", (0, 0), (-1, -1), LEFTPADDING),
+        ('FONTNAME', (0, 0), (-1, -1), FONTNAME),
+        ("FONTSIZE", (0, 0), (-1, -1), FONTSIZE),
+        ("LINEBELOW", (0, -1), (-1, -1), LINEBELOW, LINEBELOW_COLOR),
+        ('BACKGROUND', (0, 1), (-1, -1), BACKGROUND_COLOR),
+        ('GRID', (0, 0), (-1, -1), GRID, GRID_COLOR)
     ]))
 
     doc.build(

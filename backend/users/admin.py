@@ -22,12 +22,6 @@ class UsersAdmin(UserAdmin):
         'email'
     )
     search_help_text = 'Поиск по `username` и `email`'
-    list_display_links = (
-        'id',
-        'username',
-        'email',
-        'full_name'
-    )
 
     @admin.display(description='Имя фамилия')
     def full_name(self, obj):

@@ -64,7 +64,7 @@ class UserViewSet(djoser_views.UserViewSet):
                 .all()
             )
 
-        elif self.action in ('subscriptions',):
+        if self.action in ('subscriptions',):
             return (
                 Subscriber.objects.subscriber
                 .prefetch_related(
@@ -78,7 +78,7 @@ class UserViewSet(djoser_views.UserViewSet):
                 .all()
             )
 
-        elif self.action in ('subscribe',):
+        if self.action in ('subscribe',):
             return User.objects.prefetch_related(
                 Subscriber.get_prefetch_subscribers(
                     'subscribers',

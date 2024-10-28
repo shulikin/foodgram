@@ -17,6 +17,11 @@ from shortener.models import LinkMapped
 from users.models import Subscriber
 User = get_user_model()
 
+COOKING_TIME_MAX = 32_000
+COOKING_TIME_MIN = 1
+AMOUNT_MAX = 32_000
+AMOUNT_MIN = 1
+
 
 class UserSerializer(serializers.ModelSerializer):
     """Пользователи"""
@@ -88,8 +93,8 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
         source='ingredient'
     )
     amount = serializers.IntegerField(
-        max_value=32_000,
-        min_value=1
+        max_value=AMOUNT_MAX,
+        min_value=AMOUNT_MIN,
     )
 
     class Meta:
@@ -150,10 +155,6 @@ class RecipeSerializer(serializers.ModelSerializer):
         default=False,
         read_only=True
     )
-    cooking_time = serializers.IntegerField(
-        max_value=32_000,
-        min_value=1
-    )
 
     class Meta:
         model = Recipe
@@ -183,6 +184,10 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         source='recipe_ingredients'
     )
     image = Base64ImageField()
+    cooking_time = serializers.IntegerField(
+        max_value=COOKING_TIME_MAX,
+        min_value=COOKING_TIME_MIN,
+    )
 
     class Meta:
         model = Recipe
