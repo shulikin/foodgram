@@ -5,6 +5,7 @@ from django.core.validators import (
 from django.conf import settings
 from django.db import models
 
+from users.models import User
 
 AMOUNT_MIN = 1
 AMOUNT_MAX = 32000
@@ -167,7 +168,9 @@ class AuthorRecipeModel(AuthorModel):
     """Абстрактная модель Автора и Рецепта"""
 
     recipe = models.ForeignKey(
-        'recipes.Recipe', on_delete=models.CASCADE, verbose_name='Рецепт'
+        'recipes.Recipe',
+        on_delete=models.CASCADE,
+        verbose_name='Рецепт'
     )
 
     class Meta:
@@ -176,15 +179,14 @@ class AuthorRecipeModel(AuthorModel):
 
 class FavoriteRecipe(AuthorRecipeModel):
     """Избранное"""
-    # user = models.ForeignKey(
-    #     User,
-    #     on_delete=models.CASCADE,
-    #     related_name='favorites_user',
-    # )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='favorite_recipes'
+    )
     recipe = models.ForeignKey(
         Recipe,
-        on_delete=models.CASCADE,
-        related_name='recipe_id',
+        on_delete=models.CASCADE
     )
 
     class Meta:
@@ -204,6 +206,15 @@ class FavoriteRecipe(AuthorRecipeModel):
 
 class ShoppingCart(AuthorRecipeModel):
     """Корзина"""
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='shopping_cart_recipes'
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE
+    )
 
     class Meta:
         ordering = ('-id', )

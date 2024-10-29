@@ -2,14 +2,12 @@ from django.db.models import Exists, OuterRef
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
-
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-
 from djoser import views as djoser_views
 
 from api.filters import (
@@ -155,9 +153,8 @@ class UserViewSet(djoser_views.UserViewSet):
 
     @subscribe.mapping.delete
     def unsubscribe(self, request, id):
-        subscriber_deleted, _ = Subscriber.objects.filter(
-            author=self.get_object(),
-            user=request.user
+        subscriber_deleted, _ = request.user.subscriber.filter(
+            author=self.get_object()
         ).delete()
 
         if subscriber_deleted == 0:
@@ -229,14 +226,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 )
                 .annotate(
                     is_favorited=Exists(
-                        FavoriteRecipe.objects.filter(
-                            author_id=user.id,
+                        user.favorite_recipes.filter(
                             recipe=OuterRef('pk')
                         )
                     ),
                     is_in_shopping_cart=Exists(
-                        ShoppingCart.objects.filter(
-                            author_id=user.id,
+                        user.shopping_cart_recipes.filter(
                             recipe=OuterRef('pk')
                         )
                     ),
